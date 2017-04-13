@@ -1,0 +1,25 @@
+{
+  "name": "jsondb",
+  "version": "1.0.0",
+  "description": "a simple json based database",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/KiranMantha/JSONDb.git"
+  },
+  "author": "KiranMantha <kiran.newmek@gmail.com>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/KiranMantha/JSONDb/issues"
+  },
+  "homepage": "https://github.com/KiranMantha/JSONDb#readme",
+  "dependencies": {
+    "body-parser": "^1.17.1",
+    "express": "^4.15.2",
+    "path": "^0.12.7"
+  }
+}
