@@ -7,7 +7,7 @@ var routes = require('./routes/index');
 var path = require('path');
 
 app.use(express.static(__dirname + '/public' ));
-app.use(express.static(__dirname + '/bower_components'));
+app.use(express.static(__dirname + '/db'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
     extended: false
