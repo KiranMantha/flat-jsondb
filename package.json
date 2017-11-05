@@ -2,16 +2,16 @@
   "name": "jsondb",
   "version": "1.0.0",
   "description": "a simple json based database",
-  "main": "server.js",
+  "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server.js"
+    "start": "node index.js"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/KiranMantha/JSONDb.git"
   },
-  "author": "KiranMantha <kiran.newmek@gmail.com>",
+  "author": "KiranMantha <kiranv.mantha@gmail.com>",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/KiranMantha/JSONDb/issues"
