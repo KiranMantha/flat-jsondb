@@ -11,12 +11,16 @@ using namespace std;
 
 class dbcpp
 {
+    string filename;
     public:
-    string parse(string file_name)
+    dbcpp(string file_name){
+        filename = file_name;
+    }    
+    string getFileContents()
     {
         stringstream ss;
         //opens file
-        std::ifstream file(file_name.c_str());
+        std::ifstream file(filename.c_str());
         if (!file)
         {
             std::cout << "Cannot open file\n";
@@ -37,8 +41,8 @@ class dbcpp
 int main()
 {
     string st = "abc.txt";
-    dbcpp d;
-    string fileContents = d.parse(st);
+    dbcpp d = dbcpp(st);
+    string fileContents = d.getFileContents();
     //calls the parse function
     std::cout << "fileContents = " << fileContents << std::endl;
     return 0;
