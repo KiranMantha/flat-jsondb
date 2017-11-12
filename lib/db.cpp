@@ -6,34 +6,40 @@
 #include <iostream>
 #include <string>
 #include <fstream>
+#include <sstream>
 using namespace std;
 
-int parse(string file_name)
+class dbcpp
 {
-    int sum = 0;
-    int x;
-    //opens file
-    std::ifstream file(file_name.c_str()); 
-    if (!file)
+    public:
+    string parse(string file_name)
     {
-        cout << "Cannot open file\n";
-        exit(1);
+        stringstream ss;
+        //opens file
+        std::ifstream file(file_name.c_str());
+        if (!file)
+        {
+            std::cout << "Cannot open file\n";
+            exit(1);
+        }
+        std::cout << "File is opened\n";
+
+        //read file buffer
+        ss << file.rdbuf();
+
+        //closes file
+        file.close();
+
+        return ss.str();
     }
-    cout << "File is opened\n";    
-    while (file >> x) {
-        sum = sum + x;
-    }
-    //closes file
-    std::cout << file.rdbuf();
-    file.close();
-    return sum;
-}
+};
 
 int main()
 {
     string st = "abc.txt";
-    int sum = parse(st);
+    dbcpp d;
+    string fileContents = d.parse(st);
     //calls the parse function
-    cout << "Sum = " << sum << endl; 
+    std::cout << "fileContents = " << fileContents << std::endl;
     return 0;
 }
