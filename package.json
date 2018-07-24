@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node index.js"
+    "start": "rimraf data && node index.js",
+    "clean": "rimraf data"
   },
   "repository": {
     "type": "git",
@@ -18,8 +19,13 @@
   },
   "homepage": "https://github.com/KiranMantha/JSONDb#readme",
   "dependencies": {
-    "body-parser": "^1.17.1",
-    "express": "^4.15.2",
+    "graceful-fs": "^4.1.11",
+    "lodash": "^4.17.10",
+    "lodash-id": "^0.14.0",
     "path": "^0.12.7"
+  },
+  "devDependencies": {
+    "rimraf": "^2.6.2",
+    "webpack": "^4.16.2"
   }
 }

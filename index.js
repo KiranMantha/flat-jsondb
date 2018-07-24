@@ -1,22 +1,6 @@
-var express = require('express'),
-    app = express(),
-    port = 3000,
-    ip = '127.0.0.1';
-var bodyParser = require('body-parser');
-var routes = require('./routes/index');
-var path = require('path');
-
-app.use(express.static(__dirname + '/lib'));
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({
-    extended: false
-}));
-
-app.use('/', routes);
-
-var server_port = process.env.OPENSHIFT_NODEJS_PORT || port;
-var server_ip_address = process.env.OPENSHIFT_NODEJS_IP || ip;
-
-app.listen(server_port, server_ip_address, () => {
-    console.log("Listening on " + server_ip_address + ", server_port " + server_port)
-});
+const path = require('path');
+const db = require('./jsondb')(path.resolve(__dirname , './data'));
+db.createTable(['movies', 'actors', 'years']);
+//db.createTable('movies');
+const rec = db.insert('movies', { title: 'Mission Impossible' });
+console.log(db.getById('movies', rec.id));
