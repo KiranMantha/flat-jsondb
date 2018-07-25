@@ -3,9 +3,21 @@
   "version": "1.0.0",
   "description": "a simple json based database",
   "main": "index.js",
+  "jest": {
+    "collectCoverage": "true",
+    "coverageDirectory": "",
+    "projects": [
+      {
+        "displayName": "JSONDB",
+        "testMatch": [
+          "<rootDir>/**/*.spec.js"
+        ]
+      }
+    ]
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "rimraf data && node index.js",
+    "start": "node index.js",
     "clean": "rimraf data"
   },
   "repository": {
@@ -25,6 +37,7 @@
     "path": "^0.12.7"
   },
   "devDependencies": {
+    "jest": "^23.4.1",
     "rimraf": "^2.6.2",
     "webpack": "^4.16.2"
   }
