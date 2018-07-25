@@ -13,6 +13,8 @@ function jsondb(dataBasePath) {
         return Date.now();
     }
 
+    this._ = _;
+
     // Create table JSON
     this.createTable = function (tableName) {
         let tableData;
@@ -32,7 +34,7 @@ function jsondb(dataBasePath) {
     this.get = function (tableName) {
         try {
             if (utils.checkTable(tableName) && !cache[tableName]) {
-                const data = this.utils.readFile(tableName);
+                const data = utils.readFile(tableName);
                 cache[tableName] = data;
                 return data;
             } else {
@@ -71,6 +73,10 @@ function jsondb(dataBasePath) {
     this.removeWhere = function (tableName, whereAttrs) {
         _.removeWhere(cache[tableName], whereAttrs);
         utils.save(tableName, cache[tableName]);
+    }
+
+    this.dropTable = function(tableName) {
+        utils.dropTable(tableName);
     }
 
     return this;
