@@ -15,6 +15,11 @@ function jsondb(dataBasePath) {
 
     this._ = _;
 
+    // Clean cache
+    this.cleanCache = function() {
+        cache = {};
+    }
+
     // Create table JSON
     this.createTable = function (tableName) {
         let tableData;
@@ -34,10 +39,12 @@ function jsondb(dataBasePath) {
     this.get = function (tableName) {
         try {
             if (utils.checkTable(tableName) && !cache[tableName]) {
+                console.log('get: inside if');
                 const data = utils.readFile(tableName);
                 cache[tableName] = data;
                 return data;
             } else {
+                console.log('get: inside else');
                 return cache[tableName];
             }
         } catch (error) {}
@@ -76,6 +83,7 @@ function jsondb(dataBasePath) {
     }
 
     this.dropTable = function(tableName) {
+        delete cache[tableName];
         utils.dropTable(tableName);
     }
 

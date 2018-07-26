@@ -1,23 +1,34 @@
 const jsondb = require('../jsondb');
-const tempfile = require('tempfile');
+const path = require('path');
 const fs = require('graceful-fs');
-const rimraf = require('rimraf');
+const del = require('del');
 const lodash = require('lodash');
 const lodashid = require('lodash-id');
 const _ = Object.assign({}, lodash, lodashid);
 
 describe('jsondb', () => {
-    let db;
-    let tempdir = '';
+    let db = null;
+    let tempdir = path.normalize(__dirname + '/temp-db');
+    beforeAll(() => {
+        fs.mkdirSync(tempdir);
+        db = jsondb(tempdir);
+    });
+
     beforeEach(() => {
-        tempdir = tempfile();
-        db = jsondb(tempdir);    
-        db.createTable('movies');    
+        db.cleanCache();
+        db.createTable('movies');
     });
 
     afterEach(() => {
-        fs.rmdirSync(tempdir);
+        db.dropTable('movies');
     });
+
+    afterAll(() => {
+        del.sync(tempdir + '/**', {
+            force: true
+        });
+        db = null;
+    })
 
     test('create movies.json', () => {
         expect(fs.existsSync(tempdir + '/movies.json')).toBe(true);
@@ -29,26 +40,65 @@ describe('jsondb', () => {
         expect(fs.existsSync(tempdir + '/actors.json')).toBe(true);
     });
 
+    test('check for records in new table', () => {
+        db.createTable('actors');
+        let data = db.get('actors');
+        expect(data.length).toBe(0);
+    });
+
     test('check _.createId', () => {
         expect(db._.createId()).toBeTruthy();
     });
 
     test('check insert', () => {
-        const rec = db.insert('movies', { title: 'Mission Impossible' });
+        const rec = db.insert('movies', {
+            title: 'Mission Impossible'
+        });
         expect(rec.title).toBe('Mission Impossible');
+        db.cleanCache();
     });
 
     test('get on db', () => {
-        db.insert('movies', { title: 'Mission Impossible' });
+        db.insert('movies', {
+            title: 'Mission Impossible'
+        });
         const recs = db.get('movies');
-        console.log(recs);
-        expect(recs.length).toBe(1);
+        expect(recs.length).toBeGreaterThan(0);
+        db.cleanCache();
     })
 
     test('check getById', () => {
-        const rec = db.insert('movies', { title: 'Mission Impossible' });
+        const rec = db.insert('movies', {
+            title: 'Mission Impossible'
+        });
         const rec1 = db.getById('movies', rec.id);
         expect(rec1).toMatchObject(rec);
+        db.cleanCache();
+    });
+
+    test('check updateById', () => {
+        let rec = db.insert('movies', {
+            title: 'Mission Impossible'
+        });
+        rec = db.updateById('movies', rec.id, {
+            title: 'Twilight'
+        });
+        expect(rec.title).toBe('Twilight');
+        db.cleanCache();
+    });
+
+    test('check updateWhere', () => {
+        let rec = db.insert('movies', {
+            title: 'Mission Impossible'
+        });
+        rec = db.updateWhere('movies', {
+            title: 'Mission Impossible'
+        }, {
+            title: 'Twilight'
+        });
+        console.log(rec);
+        expect(rec.title).toBe('Twilight');
+        db.cleanCache();
     });
 
     test('check dropTable', () => {
