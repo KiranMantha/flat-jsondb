@@ -39,7 +39,6 @@ function jsondb(dataBasePath) {
         try {
             if (utils.checkTable(tableName)) {
                 if (!cache[tableName] || cache[tableName].length === 0) {
-                    console.log('get: inside if');
                     const data = utils.readFile(tableName);
                     cache[tableName] = data;
                     return data;
