@@ -20,7 +20,7 @@ describe('jsondb', () => {
     });
 
     afterEach(() => {
-        db.dropTable('movies');
+        db.truncateTable('movies');
     });
 
     afterAll(() => {
@@ -38,24 +38,31 @@ describe('jsondb', () => {
         db.createTable(['years', 'actors']);
         expect(fs.existsSync(tempdir + '/years.json')).toBe(true);
         expect(fs.existsSync(tempdir + '/actors.json')).toBe(true);
+        db.dropTable('years');
+        db.dropTable('actors');
     });
 
     test('check for records in new table', () => {
         db.createTable('actors');
         let data = db.get('actors');
         expect(data.length).toBe(0);
-    });
-
-    test('check _.createId', () => {
-        expect(db._.createId()).toBeTruthy();
+        db.dropTable('actors');
     });
 
     test('check insert', () => {
         const rec = db.insert('movies', {
             title: 'Mission Impossible'
         });
-        expect(rec.title).toBe('Mission Impossible');
-        db.cleanCache();
+        expect(rec[0].title).toBe('Mission Impossible');
+    });
+
+    test('insert arrayed data', () => {
+        const rec = db.insert('movies', [
+            { title: 'Mission Impossible' },
+            { title: 'Twilight' }
+        ]);
+
+        expect(rec.length).toBe(2);
     });
 
     test('get on db', () => {
@@ -64,41 +71,81 @@ describe('jsondb', () => {
         });
         const recs = db.get('movies');
         expect(recs.length).toBeGreaterThan(0);
-        db.cleanCache();
+    });
+
+    test('get on non-existing table', () => {
+        let rec = db.get('test');
+        expect(rec).toBeUndefined();
     })
 
     test('check getById', () => {
         const rec = db.insert('movies', {
             title: 'Mission Impossible'
         });
-        const rec1 = db.getById('movies', rec.id);
-        expect(rec1).toMatchObject(rec);
-        db.cleanCache();
+        const rec1 = db.getById('movies', rec[0].id);
+        expect(rec1).toMatchObject(rec[0]);
+    });
+
+    test('getWhere', () => {
+        db.insert('movies', [
+            { title: 'Mission Impossible' },
+            { title: 'Twilight' }
+        ]);
+
+        let rec = db.getWhere('movies', { title: 'Twilight' });
+        expect(rec.length).toBe(1);
     });
 
     test('check updateById', () => {
         let rec = db.insert('movies', {
             title: 'Mission Impossible'
         });
-        rec = db.updateById('movies', rec.id, {
+        rec = db.updateById('movies', rec[0].id, {
             title: 'Twilight'
         });
         expect(rec.title).toBe('Twilight');
-        db.cleanCache();
     });
 
     test('check updateWhere', () => {
-        let rec = db.insert('movies', {
+        db.insert('movies', {
             title: 'Mission Impossible'
         });
-        rec = db.updateWhere('movies', {
+        let rec = db.updateWhere('movies', {
             title: 'Mission Impossible'
         }, {
             title: 'Twilight'
         });
-        console.log(rec);
-        expect(rec.title).toBe('Twilight');
-        db.cleanCache();
+        expect(rec[0].title).toBe('Twilight');
+    });
+
+    test('removeById', () => {
+        let rec = db.insert('movies', {
+            title: 'Mission Impossible'
+        });
+        db.removeById('movies', rec[0].id);
+        rec = db.getById('movies', rec[0].id);
+        expect(rec).toBeFalsy();
+    });
+
+    test('removeWhere', ()=> {
+        db.insert('movies', [
+            { title: 'Mission Impossible', favorite: true },
+            { title: 'Twilight', favorite: true }
+        ]);
+
+        db.removeWhere('movies', { favorite: true });
+        let rec = db.getWhere('movies', {favorite: true});
+        expect(rec.length).toBe(0);
+    })
+
+    test('truncateTable', () => {
+        let rec = db.insert('movies', {
+            title: 'Mission Impossible'
+        });
+        expect(rec.length).toBe(1);
+        db.truncateTable('movies');
+        rec = db.get('movies');
+        expect(rec.length).toBe(0);
     });
 
     test('check dropTable', () => {

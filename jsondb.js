@@ -9,14 +9,13 @@ function jsondb(dataBasePath) {
 
     utils.mkdirSync();
 
-    _.createId = function() {
-        return Date.now();
+    function __insert(tableName, data) {
+        let rec = _.insert(cache[tableName], data);
+        return rec;
     }
 
-    this._ = _;
-
     // Clean cache
-    this.cleanCache = function() {
+    this.cleanCache = function () {
         cache = {};
     }
 
@@ -26,7 +25,7 @@ function jsondb(dataBasePath) {
         if (typeof tableName === 'string') {
             tableData = utils.createTable(tableName);
             cache[tableName] = tableData;
-        } else if (tableName.slice) {
+        } else if (tableName.map) {
             _.each(tableName, function (table) {
                 tableData = utils.createTable(table);
                 cache[table] = tableData;
@@ -38,14 +37,17 @@ function jsondb(dataBasePath) {
     // CURD Functions
     this.get = function (tableName) {
         try {
-            if (utils.checkTable(tableName) && !cache[tableName]) {
-                console.log('get: inside if');
-                const data = utils.readFile(tableName);
-                cache[tableName] = data;
-                return data;
+            if (utils.checkTable(tableName)) {
+                if (!cache[tableName] || cache[tableName].length === 0) {
+                    console.log('get: inside if');
+                    const data = utils.readFile(tableName);
+                    cache[tableName] = data;
+                    return data;
+                } else {
+                    return cache[tableName];
+                }
             } else {
-                console.log('get: inside else');
-                return cache[tableName];
+                return undefined;
             }
         } catch (error) {}
     }
@@ -54,8 +56,22 @@ function jsondb(dataBasePath) {
         return _.getById(cache[tableName], id);
     }
 
+    this.getWhere = function (tableName, whereAttrs) {
+        const data = this.get(tableName);
+        return _.filter(data, whereAttrs);
+    }
+
     this.insert = function (tableName, data) {
-        const rec = _.insert(cache[tableName], data);
+        let rec = [];
+        if (data.map) {
+            _.each(data, function (item) {
+                let rec1 = __insert(tableName, item);
+                rec.push(rec1);
+            });
+        } else {
+            let rec1 = __insert(tableName, data);
+            rec.push(rec1);
+        }
         utils.save(tableName, cache[tableName]);
         return rec;
     }
@@ -82,7 +98,12 @@ function jsondb(dataBasePath) {
         utils.save(tableName, cache[tableName]);
     }
 
-    this.dropTable = function(tableName) {
+    this.truncateTable = function (tableName) {
+        cache[tableName] = [];
+        utils.save(tableName, []);
+    }
+
+    this.dropTable = function (tableName) {
         delete cache[tableName];
         utils.dropTable(tableName);
     }
