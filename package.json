@@ -16,6 +16,7 @@
     ]
   },
   "scripts": {
+    "remove-testdb": "rimraf __tests__/temp-db",
     "test": "jest",
     "start": "node index.js",
     "clean": "rimraf data",
