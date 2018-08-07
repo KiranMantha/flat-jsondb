@@ -71,7 +71,6 @@ describe("jsondb", () => {
       title: "Mission Impossible"
     });
     const recs = await db.get("movies");
-    console.log(`get on db recs: ${recs}`);
     expect(recs.length).toBeGreaterThan(0);
   });
 
@@ -84,7 +83,7 @@ describe("jsondb", () => {
     const rec = await db.insert("movies", {
       title: "Mission Impossible"
     });
-    const rec1 = db.getById("movies", rec[0].id);
+    const rec1 = await db.getById("movies", rec[0].id);
     expect(rec1).toMatchObject(rec[0]);
   });
 
@@ -94,7 +93,7 @@ describe("jsondb", () => {
       { title: "Twilight" }
     ]);
 
-    let rec = db.getWhere("movies", { title: "Twilight" });
+    let rec = await db.getWhere("movies", { title: "Twilight" });
     expect(rec.length).toBe(1);
   });
 
@@ -128,8 +127,8 @@ describe("jsondb", () => {
     let rec = await db.insert("movies", {
       title: "Mission Impossible"
     });
-    db.removeById("movies", rec[0].id);
-    rec = db.getById("movies", rec[0].id);
+    await db.removeById("movies", rec[0].id);
+    rec = await db.getById("movies", rec[0].id);
     expect(rec).toBeFalsy();
   });
 
@@ -140,7 +139,7 @@ describe("jsondb", () => {
     ]);
 
     await db.removeWhere("movies", { favorite: true });
-    let rec = db.getWhere("movies", { favorite: true });
+    let rec = await db.getWhere("movies", { favorite: true });
     expect(rec.length).toBe(0);
   });
 
@@ -148,9 +147,11 @@ describe("jsondb", () => {
     let rec = await db.insert("movies", {
       title: "Mission Impossible"
     });
+    
     expect(rec.length).toBe(1);
-    db.truncateTable("movies");
+    await db.truncateTable("movies");
     rec = await db.get("movies");
+    console.log('truncateTable',rec)
     expect(rec.length).toBe(0);
   });
 

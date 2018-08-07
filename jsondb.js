@@ -44,8 +44,8 @@ function jsondb(dataBasePath) {
       if (utils.checkTable(tableName)) {
         if (!cache[tableName] || cache[tableName].length === 0) {
           const data = await utils.readFile(tableName);
-          cache[tableName] = data;
-          return data;
+          cache[tableName] = JSON.parse(data);
+          return JSON.parse(data);
         } else {
           return cache[tableName];
         }
