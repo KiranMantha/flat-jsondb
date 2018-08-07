@@ -9,18 +9,18 @@ const del = require('del');
 describe("jsondb", () => {
   let db = null;
   let tempdir = path.join(__dirname, "temp-db");
-  beforeAll(() => {
+  beforeAll(async () => {
     fs.mkdirSync(tempdir);
     db = jsondb(tempdir);
-  });
-
-  beforeEach(async () => {
-    db.cleanCache();
     await db.createTable("movies");
   });
 
-  afterEach(() => {
-    db.truncateTable("movies");
+  beforeEach(() => {
+    //db.cleanCache();    
+  });
+
+  afterEach(async () => {
+    await db.truncateTable("movies");
   });
 
   afterAll(() => {
@@ -34,7 +34,7 @@ describe("jsondb", () => {
     expect(fs.existsSync(tempdir + "/movies.json")).toBe(true);
   });
 
-  it("create movies.json, actors.json", async () => {
+  it("create years.json, actors.json", async () => {
     await db.createTable(["years", "actors"]);
     expect(fs.existsSync(tempdir + "/years.json")).toBe(true);
     expect(fs.existsSync(tempdir + "/actors.json")).toBe(true);
@@ -44,7 +44,8 @@ describe("jsondb", () => {
 
   it("check for records in new table", async () => {
     await db.createTable("actors");
-    let data = db.get("actors");
+    let data = await db.get("actors");
+    console.log(data);
     expect(data.length).toBe(0);
     db.dropTable("actors");
   });
@@ -69,7 +70,8 @@ describe("jsondb", () => {
     await db.insert("movies", {
       title: "Mission Impossible"
     });
-    const recs = db.get("movies");
+    const recs = await db.get("movies");
+    console.log(`get on db recs: ${recs}`);
     expect(recs.length).toBeGreaterThan(0);
   });
 

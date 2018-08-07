@@ -1,5 +1,6 @@
 const path = require("path");
 const db = require("./jsondb")(path.resolve(__dirname, "./data"));
+const delay = require('delay');
 async function init() {
   await db.createTable(["movies", "actors", "years"]);
   //await db.createTable('movies');
@@ -20,3 +21,14 @@ async function init() {
 }
 
 init();
+
+
+async function test() {
+  console.log("Who's this?");
+  await delay(2000);
+  console.log("this is Test");
+  await delay(3000);
+  console.log("Hi Test");
+}
+
+test();

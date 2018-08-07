@@ -105,7 +105,7 @@ function jsondb(dataBasePath) {
 
   this.truncateTable = async function(tableName) {
     cache[tableName] = [];
-    utils.save(tableName, []);
+    await utils.save(tableName, []);
   };
 
   this.dropTable = function(tableName) {
