@@ -1,6 +1,7 @@
 const jsondb = require("../jsondb");
 const path = require("path");
 const fs = require("graceful-fs");
+const delay = require('delay');
 
 describe("jsondb", () => {
   let db = null;
@@ -10,6 +11,10 @@ describe("jsondb", () => {
     db = jsondb(tempdir);
     db.cleanCache();
     await db.createTable("movies");
+  });
+
+  beforeEach(async () => {    
+    await delay(3000);
   });
 
   afterEach(async () => {
