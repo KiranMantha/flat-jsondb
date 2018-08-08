@@ -16,9 +16,11 @@
     ]
   },
   "scripts": {
-    "test": "jest",
-    "start": "node index.js",
-    "clean": "rimraf data"
+    "remove-testdb": "rimraf __tests__/temp-db",
+    "test": "npm run remove-testdb && jest",
+    "start": "npm run clean && node index.js",
+    "clean": "rimraf data",
+    "prettier": "prettier *.js **/*.js --write"
   },
   "repository": {
     "type": "git",
@@ -37,8 +39,10 @@
   },
   "devDependencies": {
     "del": "^3.0.0",
+    "delay": "^3.0.0",
     "jest": "^23.4.1",
     "path": "^0.12.7",
+    "prettier": "^1.14.0",
     "rimraf": "^2.6.2",
     "webpack": "^4.16.2"
   }
