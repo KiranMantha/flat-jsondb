@@ -56,8 +56,9 @@ function jsondb(dataBasePath) {
   };
 
   this.getById = async function(tableName, id) {
-    if (!cache[tableName] || cache[tableName].length === 0)
+    if (!cache[tableName] || cache[tableName].length === 0) {
       await this.get(tableName);
+    }
     return _.getById(cache[tableName], id);
   };
 
@@ -105,7 +106,7 @@ function jsondb(dataBasePath) {
 
   this.truncateTable = async function(tableName) {
     cache[tableName] = [];
-    await utils.save(tableName, []);
+    await __save(tableName);
   };
 
   this.dropTable = function(tableName) {

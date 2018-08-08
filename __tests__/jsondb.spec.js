@@ -1,10 +1,6 @@
 const jsondb = require("../jsondb");
 const path = require("path");
 const fs = require("graceful-fs");
-const lodash = require("lodash");
-const lodashid = require("lodash-id");
-const _ = Object.assign({}, lodash, lodashid);
-const del = require('del');
 
 describe("jsondb", () => {
   let db = null;
@@ -12,11 +8,8 @@ describe("jsondb", () => {
   beforeAll(async () => {
     fs.mkdirSync(tempdir);
     db = jsondb(tempdir);
+    db.cleanCache();
     await db.createTable("movies");
-  });
-
-  beforeEach(() => {
-    //db.cleanCache();    
   });
 
   afterEach(async () => {
@@ -24,13 +17,10 @@ describe("jsondb", () => {
   });
 
   afterAll(() => {
-    del.sync(tempdir + "/**", {
-      force: true
-    });
     db = null;
   });
 
-  it("create movies.json", async() => {
+  it("create movies.json", () => {    
     expect(fs.existsSync(tempdir + "/movies.json")).toBe(true);
   });
 
@@ -43,11 +33,8 @@ describe("jsondb", () => {
   });
 
   it("check for records in new table", async () => {
-    await db.createTable("actors");
-    let data = await db.get("actors");
-    console.log(data);
+    let data = await db.get("movies");
     expect(data.length).toBe(0);
-    db.dropTable("actors");
   });
 
   it("check insert", async () => {
@@ -58,9 +45,12 @@ describe("jsondb", () => {
   });
 
   it("insert arrayed data", async () => {
-    const rec = await db.insert("movies", [
-      { title: "Mission Impossible" },
-      { title: "Twilight" }
+    const rec = await db.insert("movies", [{
+        title: "Mission Impossible"
+      },
+      {
+        title: "Twilight"
+      }
     ]);
 
     expect(rec.length).toBe(2);
@@ -88,12 +78,17 @@ describe("jsondb", () => {
   });
 
   it("getWhere", async () => {
-    await db.insert("movies", [
-      { title: "Mission Impossible" },
-      { title: "Twilight" }
+    await db.insert("movies", [{
+        title: "Mission Impossible"
+      },
+      {
+        title: "Twilight"
+      }
     ]);
 
-    let rec = await db.getWhere("movies", { title: "Twilight" });
+    let rec = await db.getWhere("movies", {
+      title: "Twilight"
+    });
     expect(rec.length).toBe(1);
   });
 
@@ -107,23 +102,21 @@ describe("jsondb", () => {
     expect(rec.title).toBe("Twilight");
   });
 
-  it("check updateWhere",async () => {
+  it("check updateWhere", async () => {
     await db.insert("movies", {
       title: "Mission Impossible"
     });
     let rec = await db.updateWhere(
-      "movies",
-      {
+      "movies", {
         title: "Mission Impossible"
-      },
-      {
+      }, {
         title: "Twilight"
       }
     );
     expect(rec[0].title).toBe("Twilight");
   });
 
-  it("removeById",async () => {
+  it("removeById", async () => {
     let rec = await db.insert("movies", {
       title: "Mission Impossible"
     });
@@ -132,30 +125,37 @@ describe("jsondb", () => {
     expect(rec).toBeFalsy();
   });
 
-  it("removeWhere", async() => {
-    await db.insert("movies", [
-      { title: "Mission Impossible", favorite: true },
-      { title: "Twilight", favorite: true }
+  it("removeWhere", async () => {
+    await db.insert("movies", [{
+        title: "Mission Impossible",
+        favorite: true
+      },
+      {
+        title: "Twilight",
+        favorite: true
+      }
     ]);
 
-    await db.removeWhere("movies", { favorite: true });
-    let rec = await db.getWhere("movies", { favorite: true });
+    await db.removeWhere("movies", {
+      favorite: true
+    });
+    let rec = await db.getWhere("movies", {
+      favorite: true
+    });
     expect(rec.length).toBe(0);
   });
 
-  it("truncateTable", async() => {
+  it("truncateTable", async () => {
     let rec = await db.insert("movies", {
       title: "Mission Impossible"
     });
-    
     expect(rec.length).toBe(1);
     await db.truncateTable("movies");
     rec = await db.get("movies");
-    console.log('truncateTable',rec)
     expect(rec.length).toBe(0);
   });
 
-  it("check dropTable", async() => {
+  it("check dropTable", async () => {
     db.dropTable("movies");
     expect(fs.existsSync(tempdir + "/movies.json")).toBe(false);
   });
