@@ -1,6 +1,6 @@
-[![Build Status](https://travis-ci.org/KiranMantha/JSONDb.svg?branch=master)](https://travis-ci.org/KiranMantha/JSONDb)
+[![Build Status](https://travis-ci.org/KiranMantha/flat-jsondb.svg?branch=master)](https://travis-ci.org/KiranMantha/flat-jsondb)
 
-# JSONDb
+# Flat-JSONDB
 a simple flat file based JSON database
 
 ### Create Database Folder

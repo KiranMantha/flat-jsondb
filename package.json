@@ -1,5 +1,5 @@
 {
-  "name": "jsondb",
+  "name": "flat-jsondb",
   "version": "1.0.0",
   "description": "a simple json based database",
   "main": "index.js",
@@ -8,7 +8,7 @@
     "coverageDirectory": "<rootDir>/coverage",
     "projects": [
       {
-        "displayName": "JSONDB",
+        "displayName": "FLAT-JSONDB",
         "testMatch": [
           "<rootDir>/__tests__/*.spec.js"
         ]
@@ -24,14 +24,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/KiranMantha/JSONDb.git"
+    "url": "git+https://github.com/KiranMantha/flat-jsondb.git"
   },
   "author": "KiranMantha <kiranv.mantha@gmail.com>",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/KiranMantha/JSONDb/issues"
+    "url": "https://github.com/KiranMantha/flat-jsondb/issues"
   },
-  "homepage": "https://github.com/KiranMantha/JSONDb#readme",
+  "homepage": "https://github.com/KiranMantha/flat-jsondb#readme",
   "dependencies": {
     "graceful-fs": "^4.1.11",
     "lodash": "^4.17.10",
