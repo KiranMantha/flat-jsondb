@@ -14,7 +14,7 @@ describe("jsondb", () => {
   });
 
   beforeEach(async () => {    
-    await delay(3000);
+    await delay(1000);
   });
 
   afterEach(async () => {
@@ -151,13 +151,15 @@ describe("jsondb", () => {
   });
 
   it("truncateTable", async () => {
-    let rec = await db.insert("movies", {
+    await db.createTable('test');
+    let rec = await db.insert("test", {
       title: "Mission Impossible"
     });
     expect(rec.length).toBe(1);
-    await db.truncateTable("movies");
-    rec = await db.get("movies");
+    await db.truncateTable("test");
+    rec = await db.get("test");
     expect(rec.length).toBe(0);
+    db.dropTable("test");
   });
 
   it("check dropTable", async () => {
