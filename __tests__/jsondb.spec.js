@@ -1,7 +1,6 @@
 const jsondb = require("../jsondb");
 const path = require("path");
 const fs = require("graceful-fs");
-const delay = require('delay');
 
 describe("jsondb", () => {
   let db = null;
@@ -147,15 +146,13 @@ describe("jsondb", () => {
   });
 
   it("truncateTable", async () => {
-    await db.createTable('test');
-    let rec = await db.insert("test", {
+    let rec = await db.insert("movies", {
       title: "Mission Impossible"
     });
     expect(rec.length).toBe(1);
-    await db.truncateTable("test");
-    rec = await db.get("test");
+    await db.truncateTable("movies");
+    rec = await db.get("movies");
     expect(rec.length).toBe(0);
-    db.dropTable("test");
   });
 
   it("check dropTable", async () => {

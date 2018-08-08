@@ -7,13 +7,16 @@ function jsondb(dataBasePath) {
   let utils = new Utils(dataBasePath);
   let cache = {};
 
+  //Create database folder
   utils.mkdirSync();
 
+  //private insert function
   function __insert(tableName, data) {
     let rec = _.insert(cache[tableName], data);
     return rec;
   }
 
+  //private save function
   async function __save(tableName) {
     await utils.save(tableName, cache[tableName]);
   }
