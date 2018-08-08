@@ -13,10 +13,6 @@ describe("jsondb", () => {
     await db.createTable("movies");
   });
 
-  beforeEach(async () => {    
-    //await delay(1000);
-  });
-
   afterEach(async () => {
     await db.truncateTable("movies");
   });
