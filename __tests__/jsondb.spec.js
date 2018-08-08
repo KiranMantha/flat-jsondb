@@ -1,4 +1,4 @@
-const jsondb = require("../jsondb");
+const jsondb = require("../index");
 const path = require("path");
 const fs = require("graceful-fs");
 
@@ -20,7 +20,7 @@ describe("jsondb", () => {
     db = null;
   });
 
-  it("create movies.json", () => {    
+  it("create movies.json", () => {
     expect(fs.existsSync(tempdir + "/movies.json")).toBe(true);
   });
 
@@ -45,7 +45,8 @@ describe("jsondb", () => {
   });
 
   it("insert arrayed data", async () => {
-    const rec = await db.insert("movies", [{
+    const rec = await db.insert("movies", [
+      {
         title: "Mission Impossible"
       },
       {
@@ -78,7 +79,8 @@ describe("jsondb", () => {
   });
 
   it("getWhere", async () => {
-    await db.insert("movies", [{
+    await db.insert("movies", [
+      {
         title: "Mission Impossible"
       },
       {
@@ -107,9 +109,11 @@ describe("jsondb", () => {
       title: "Mission Impossible"
     });
     let rec = await db.updateWhere(
-      "movies", {
+      "movies",
+      {
         title: "Mission Impossible"
-      }, {
+      },
+      {
         title: "Twilight"
       }
     );
@@ -126,7 +130,8 @@ describe("jsondb", () => {
   });
 
   it("removeWhere", async () => {
-    await db.insert("movies", [{
+    await db.insert("movies", [
+      {
         title: "Mission Impossible",
         favorite: true
       },

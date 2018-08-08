@@ -18,7 +18,7 @@
   "scripts": {
     "remove-testdb": "rimraf __tests__/temp-db",
     "test": "npm run remove-testdb && jest",
-    "start": "npm run clean && node index.js",
+    "start": "npm run clean && node jsondb.js",
     "clean": "rimraf data",
     "prettier": "prettier *.js **/*.js --write"
   },
