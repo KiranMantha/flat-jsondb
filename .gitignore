@@ -5,3 +5,4 @@
 /coverage/**
 /__tests__/temp-db
 /__tests__/temp-db/**
+/package-lock.json
