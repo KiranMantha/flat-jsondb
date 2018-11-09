@@ -17,7 +17,8 @@
   },
   "scripts": {
     "remove-testdb": "rimraf __tests__/temp-db",
-    "test": "npm run remove-testdb && jest",
+    "test": "npm run remove-testdb && jest --coverage --coverageReporters=text-lcov | coveralls",
+    "test-local": "npm run remove-testdb && jest",
     "start": "npm run clean && node jsondb.js",
     "clean": "rimraf data && rimraf coverage",
     "prettier": "prettier *.js **/*.js --write"
