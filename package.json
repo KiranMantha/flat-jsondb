@@ -38,6 +38,7 @@
     "lodash-id": "^0.14.0"
   },
   "devDependencies": {
+    "coveralls": "^3.0.2",
     "del": "^3.0.0",
     "jest": "^23.4.1",
     "path": "^0.12.7",

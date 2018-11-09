@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/KiranMantha/flat-jsondb.svg?branch=master)](https://travis-ci.org/KiranMantha/flat-jsondb)
+[![Build Status](https://travis-ci.org/KiranMantha/flat-jsondb.svg?branch=master)](https://travis-ci.org/KiranMantha/flat-jsondb) [![Coverage Status](https://coveralls.io/repos/github/KiranMantha/flat-jsondb/badge.svg?branch=master)](https://coveralls.io/github/KiranMantha/flat-jsondb?branch=master)
 
 # Flat-JSONDB
 a simple flat file based JSON database
