@@ -39,7 +39,7 @@ describe("jsondb", () => {
 
   it("check insert", async () => {
     const rec = await db.insert("movies", {
-      title: "Mission Impossible"
+      title: "Mission Impossible",
     });
     expect(rec[0].title).toBe("Mission Impossible");
   });
@@ -47,11 +47,11 @@ describe("jsondb", () => {
   it("insert arrayed data", async () => {
     const rec = await db.insert("movies", [
       {
-        title: "Mission Impossible"
+        title: "Mission Impossible",
       },
       {
-        title: "Twilight"
-      }
+        title: "Twilight",
+      },
     ]);
 
     expect(rec.length).toBe(2);
@@ -59,7 +59,7 @@ describe("jsondb", () => {
 
   it("get on db", async () => {
     await db.insert("movies", {
-      title: "Mission Impossible"
+      title: "Mission Impossible",
     });
     const recs = await db.get("movies");
     expect(recs.length).toBeGreaterThan(0);
@@ -72,7 +72,7 @@ describe("jsondb", () => {
 
   it("check getById", async () => {
     const rec = await db.insert("movies", {
-      title: "Mission Impossible"
+      title: "Mission Impossible",
     });
     const rec1 = await db.getById("movies", rec[0].id);
     expect(rec1).toMatchObject(rec[0]);
@@ -81,40 +81,40 @@ describe("jsondb", () => {
   it("getWhere", async () => {
     await db.insert("movies", [
       {
-        title: "Mission Impossible"
+        title: "Mission Impossible",
       },
       {
-        title: "Twilight"
-      }
+        title: "Twilight",
+      },
     ]);
 
     let rec = await db.getWhere("movies", {
-      title: "Twilight"
+      title: "Twilight",
     });
     expect(rec.length).toBe(1);
   });
 
   it("check updateById", async () => {
     let rec = await db.insert("movies", {
-      title: "Mission Impossible"
+      title: "Mission Impossible",
     });
     rec = await db.updateById("movies", rec[0].id, {
-      title: "Twilight"
+      title: "Twilight",
     });
     expect(rec.title).toBe("Twilight");
   });
 
   it("check updateWhere", async () => {
     await db.insert("movies", {
-      title: "Mission Impossible"
+      title: "Mission Impossible",
     });
     let rec = await db.updateWhere(
       "movies",
       {
-        title: "Mission Impossible"
+        title: "Mission Impossible",
       },
       {
-        title: "Twilight"
+        title: "Twilight",
       }
     );
     expect(rec[0].title).toBe("Twilight");
@@ -122,7 +122,7 @@ describe("jsondb", () => {
 
   it("removeById", async () => {
     let rec = await db.insert("movies", {
-      title: "Mission Impossible"
+      title: "Mission Impossible",
     });
     await db.removeById("movies", rec[0].id);
     rec = await db.getById("movies", rec[0].id);
@@ -133,26 +133,26 @@ describe("jsondb", () => {
     await db.insert("movies", [
       {
         title: "Mission Impossible",
-        favorite: true
+        favorite: true,
       },
       {
         title: "Twilight",
-        favorite: true
-      }
+        favorite: true,
+      },
     ]);
 
     await db.removeWhere("movies", {
-      favorite: true
+      favorite: true,
     });
     let rec = await db.getWhere("movies", {
-      favorite: true
+      favorite: true,
     });
     expect(rec.length).toBe(0);
   });
 
   it("truncateTable", async () => {
     let rec = await db.insert("movies", {
-      title: "Mission Impossible"
+      title: "Mission Impossible",
     });
     expect(rec.length).toBe(1);
     await db.truncateTable("movies");

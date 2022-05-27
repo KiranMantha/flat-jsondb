@@ -34,16 +34,16 @@
   },
   "homepage": "https://github.com/KiranMantha/flat-jsondb#readme",
   "dependencies": {
-    "graceful-fs": "^4.1.11",
-    "lodash": "^4.17.10",
-    "lodash-id": "^0.14.0"
+    "graceful-fs": "^4.2.10",
+    "lodash": "^4.17.21",
+    "lodash-id": "^0.14.1"
   },
   "devDependencies": {
-    "coveralls": "^3.0.2",
-    "del": "^3.0.0",
-    "jest": "^25.1.0",
+    "coveralls": "^3.1.1",
+    "del": "^6.1.1",
+    "jest": "^28.1.0",
     "path": "^0.12.7",
-    "prettier": "^1.14.0",
-    "rimraf": "^2.6.2"
+    "prettier": "^2.6.2",
+    "rimraf": "^3.0.2"
   }
 }
