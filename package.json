@@ -2,16 +2,16 @@
   "name": "flat-jsondb",
   "version": "2.0.0",
   "description": "a simple json based database",
-  "main": "./dist/index.js",
-  "module": "./dist/index.js",
+  "main": "./src/index.js",
+  "module": "./src/index.js",
   "type": "module",
   "files": [
-    "dist/**/*"
+    "src/**/*"
   ],
   "exports": {
     ".": {
-      "node": "./dist/index.js",
-      "default": "./dist/index.js"
+      "node": "./src/index.js",
+      "default": "./src/index.js"
     },
     "./package.json": "./package.json"
   },

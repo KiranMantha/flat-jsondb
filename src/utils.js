@@ -2,15 +2,6 @@ import { createRequire } from 'module';
 const require = createRequire(import.meta.url);
 const { createReadStream, createWriteStream, existsSync, promises, unlinkSync } = require('graceful-fs');
 
-// (async function loadFs() {
-//   const fs = await import('graceful-fs');
-//   createReadStream = fs.createReadStream;
-//   createWriteStream = fs.createWriteStream;
-//   existsSync = fs.existsSync;
-//   promises = fs.promises;
-//   unlinkSync = fs.unlinkSync;
-// })();
-
 export class Utils {
   constructor(dirPath) {
     this.defaultValue = [];
