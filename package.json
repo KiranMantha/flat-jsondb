@@ -1,6 +1,6 @@
 {
   "name": "flat-jsondb",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "description": "a simple json based database",
   "main": "./dist/index.js",
   "module": "./dist/index.js",
