@@ -1,167 +1,120 @@
-const jsondb = require("../index");
-const path = require("path");
-const fs = require("graceful-fs");
+import { existsSync, mkdirSync, rmdirSync } from 'graceful-fs';
+import path from 'path';
+import { JsonDB } from '../src/index.js';
 
-describe("jsondb", () => {
+describe('JsonDB', () => {
   let db = null;
-  let tempdir = path.join(__dirname, "temp-db");
+  const tempDir = path.join(__dirname, 'temp-db');
+
   beforeAll(async () => {
-    fs.mkdirSync(tempdir);
-    db = jsondb(tempdir);
+    if (!existsSync(tempDir)) {
+      mkdirSync(tempDir);
+    }
+    db = new JsonDB(tempDir);
     db.cleanCache();
-    await db.createTable("movies");
+    await db.createTable('movies');
   });
 
   afterEach(async () => {
-    await db.truncateTable("movies");
+    await db.truncateTable('movies');
   });
 
   afterAll(() => {
     db = null;
+    if (existsSync(tempDir)) {
+      rmdirSync(tempDir, { recursive: true });
+    }
   });
 
-  it("create movies.json", () => {
-    expect(fs.existsSync(tempdir + "/movies.json")).toBe(true);
+  it('should create movies.json', () => {
+    expect(existsSync(`${tempDir}/movies.json`)).toBe(true);
   });
 
-  it("create years.json, actors.json", async () => {
-    await db.createTable(["years", "actors"]);
-    expect(fs.existsSync(tempdir + "/years.json")).toBe(true);
-    expect(fs.existsSync(tempdir + "/actors.json")).toBe(true);
-    db.dropTable("years");
-    db.dropTable("actors");
+  it('should create years.json and actors.json', async () => {
+    await db.createTable(['years', 'actors']);
+    expect(existsSync(`${tempDir}/years.json`)).toBe(true);
+    expect(existsSync(`${tempDir}/actors.json`)).toBe(true);
+    db.dropTable('years');
+    db.dropTable('actors');
   });
 
-  it("check for records in new table", async () => {
-    let data = await db.get("movies");
+  it('should have no records in a new table', async () => {
+    const data = await db.get('movies');
     expect(data.length).toBe(0);
   });
 
-  it("check insert", async () => {
-    const rec = await db.insert("movies", {
-      title: "Mission Impossible",
-    });
-    expect(rec[0].title).toBe("Mission Impossible");
+  it('should insert a record', async () => {
+    const rec = await db.insert('movies', { title: 'Mission Impossible' });
+    expect(rec[0].title).toBe('Mission Impossible');
   });
 
-  it("insert arrayed data", async () => {
-    const rec = await db.insert("movies", [
-      {
-        title: "Mission Impossible",
-      },
-      {
-        title: "Twilight",
-      },
-    ]);
-
+  it('should insert multiple records', async () => {
+    const rec = await db.insert('movies', [{ title: 'Mission Impossible' }, { title: 'Twilight' }]);
     expect(rec.length).toBe(2);
   });
 
-  it("get on db", async () => {
-    await db.insert("movies", {
-      title: "Mission Impossible",
-    });
-    const recs = await db.get("movies");
+  it('should retrieve records from the database', async () => {
+    await db.insert('movies', { title: 'Mission Impossible' });
+    const recs = await db.get('movies');
     expect(recs.length).toBeGreaterThan(0);
   });
 
-  it("get on non-existing table", async () => {
-    let rec = await db.get("it");
+  it('should return undefined for a non-existing table', async () => {
+    const rec = await db.get('nonexistent');
     expect(rec).toBeUndefined();
   });
 
-  it("check getById", async () => {
-    const rec = await db.insert("movies", {
-      title: "Mission Impossible",
-    });
-    const rec1 = await db.getById("movies", rec[0].id);
-    expect(rec1).toMatchObject(rec[0]);
+  it('should retrieve a record by ID', async () => {
+    const rec = await db.insert('movies', { title: 'Mission Impossible' });
+    const recById = await db.getById('movies', rec[0].id);
+    expect(recById).toMatchObject(rec[0]);
   });
 
-  it("getWhere", async () => {
-    await db.insert("movies", [
-      {
-        title: "Mission Impossible",
-      },
-      {
-        title: "Twilight",
-      },
-    ]);
-
-    let rec = await db.getWhere("movies", {
-      title: "Twilight",
-    });
+  it('should retrieve records with specific attributes', async () => {
+    await db.insert('movies', [{ title: 'Mission Impossible' }, { title: 'Twilight' }]);
+    const rec = await db.getWhere('movies', { title: 'Twilight' });
     expect(rec.length).toBe(1);
   });
 
-  it("check updateById", async () => {
-    let rec = await db.insert("movies", {
-      title: "Mission Impossible",
-    });
-    rec = await db.updateById("movies", rec[0].id, {
-      title: "Twilight",
-    });
-    expect(rec.title).toBe("Twilight");
+  it('should update a record by ID', async () => {
+    let rec = await db.insert('movies', { title: 'Mission Impossible' });
+    rec = await db.updateById('movies', rec[0].id, { title: 'Twilight' });
+    expect(rec.title).toBe('Twilight');
   });
 
-  it("check updateWhere", async () => {
-    await db.insert("movies", {
-      title: "Mission Impossible",
-    });
-    let rec = await db.updateWhere(
-      "movies",
-      {
-        title: "Mission Impossible",
-      },
-      {
-        title: "Twilight",
-      }
-    );
-    expect(rec[0].title).toBe("Twilight");
+  it('should update records with specific attributes', async () => {
+    await db.insert('movies', { title: 'Mission Impossible' });
+    const rec = await db.updateWhere('movies', { title: 'Mission Impossible' }, { title: 'Twilight' });
+    expect(rec[0].title).toBe('Twilight');
   });
 
-  it("removeById", async () => {
-    let rec = await db.insert("movies", {
-      title: "Mission Impossible",
-    });
-    await db.removeById("movies", rec[0].id);
-    rec = await db.getById("movies", rec[0].id);
-    expect(rec).toBeFalsy();
+  it('should remove a record by ID', async () => {
+    const rec = await db.insert('movies', { title: 'Mission Impossible' });
+    await db.removeById('movies', rec[0].id);
+    const recById = await db.getById('movies', rec[0].id);
+    expect(recById).toBeFalsy();
   });
 
-  it("removeWhere", async () => {
-    await db.insert("movies", [
-      {
-        title: "Mission Impossible",
-        favorite: true,
-      },
-      {
-        title: "Twilight",
-        favorite: true,
-      },
+  it('should remove records with specific attributes', async () => {
+    await db.insert('movies', [
+      { title: 'Mission Impossible', favorite: true },
+      { title: 'Twilight', favorite: true }
     ]);
-
-    await db.removeWhere("movies", {
-      favorite: true,
-    });
-    let rec = await db.getWhere("movies", {
-      favorite: true,
-    });
+    await db.removeWhere('movies', { favorite: true });
+    const rec = await db.getWhere('movies', { favorite: true });
     expect(rec.length).toBe(0);
   });
 
-  it("truncateTable", async () => {
-    let rec = await db.insert("movies", {
-      title: "Mission Impossible",
-    });
+  it('should truncate a table', async () => {
+    const rec = await db.insert('movies', { title: 'Mission Impossible' });
     expect(rec.length).toBe(1);
-    await db.truncateTable("movies");
-    rec = await db.get("movies");
-    expect(rec.length).toBe(0);
+    await db.truncateTable('movies');
+    const emptyRec = await db.get('movies');
+    expect(emptyRec.length).toBe(0);
   });
 
-  it("check dropTable", async () => {
-    db.dropTable("movies");
-    expect(fs.existsSync(tempdir + "/movies.json")).toBe(false);
+  it('should drop a table', async () => {
+    db.dropTable('movies');
+    expect(existsSync(`${tempDir}/movies.json`)).toBe(false);
   });
 });
